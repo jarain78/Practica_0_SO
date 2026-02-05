@@ -36,7 +36,7 @@ El proyecto está diseñado para ser **totalmente autocontenido**, de modo que c
 ```bash
 sudo apt update
 sudo apt install -y build-essential cmake
-
+```
 
 ---
 
