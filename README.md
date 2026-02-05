@@ -1,4 +1,4 @@
-```markdown
+
 # Práctica de Sistemas Operativos — C++ (Proyecto Autocontenido)
 
 ## 1. Descripción
@@ -9,7 +9,7 @@ El proyecto está diseñado para ser **totalmente autocontenido**, de modo que c
 
 ## 2. Estructura del repositorio
 
-
+```
 .
 ├── src/                # Código fuente (.cpp)
 │   ├── main.cpp
@@ -20,7 +20,7 @@ El proyecto está diseñado para ser **totalmente autocontenido**, de modo que c
 ├── CMakeLists.txt      # Configuración de compilación (CMake)
 ├── Makefile            # Alternativa de compilación (opcional)
 └── README.md
-
+```
 
 
 ---
