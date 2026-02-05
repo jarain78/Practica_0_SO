@@ -1,11 +1,9 @@
 ```markdown
-# Práctica de Sistemas Operativos (C++) — README
+# Práctica de Sistemas Operativos — C++ (Proyecto Autocontenido)
 
 ## 1. Descripción
-Este repositorio contiene una práctica de **Sistemas Operativos** desarrollada en **C++**.  
-El objetivo principal es implementar y probar conceptos básicos de SO (procesos/hilos, sincronización, IPC, planificación, etc., según el enunciado de la práctica).
-
-> ✅ **Proyecto autocontenido**: incluye instrucciones completas para compilar, ejecutar y verificar el funcionamiento.
+Este repositorio contiene una **práctica de Sistemas Operativos** desarrollada en **C++**, cuyo objetivo es aplicar y demostrar conceptos fundamentales de la asignatura, tales como **procesos e hilos**, **sincronización**, **comunicación entre procesos (IPC)** y **gestión de recursos del sistema**.  
+El proyecto está diseñado para ser **totalmente autocontenido**, de modo que cualquier usuario pueda **compilar y ejecutar la práctica** siguiendo exclusivamente este documento.
 
 ---
 
@@ -13,45 +11,60 @@ El objetivo principal es implementar y probar conceptos básicos de SO (procesos
 ```
 
 .
-├── src/                # Código fuente (.cpp, .h)
-├── include/            # Cabeceras (opcional)
-├── tests/              # Tests (opcional)
-├── data/               # Archivos de entrada/salida de ejemplo (opcional)
-├── build/              # Carpeta de compilación (generada, no versionar)
-├── CMakeLists.txt      # Configuración de build (CMake)
-├── Makefile            # Alternativa de build (opcional)
+├── src/                # Código fuente (.cpp)
+│   ├── main.cpp
+│   └── opencv_test.cpp
+├── include/            # Ficheros de cabecera (.h)
+├── data/               # Datos de entrada de ejemplo (opcional)
+├── build/              # Directorio de compilación (generado)
+├── CMakeLists.txt      # Configuración de compilación (CMake)
+├── Makefile            # Alternativa de compilación (opcional)
 └── README.md
 
 ````
 
 ---
 
-## 3. Requisitos
-### 3.1 Sistema
-- Linux (recomendado **Ubuntu 22.04+** o similar)
+## 3. Requisitos del sistema
+- Sistema operativo: **Linux** (probado en Ubuntu 22.04)
+- Compilador: **g++** con soporte **C++17**
+- Herramientas de compilación:
+  - `cmake` ≥ 3.16
+  - `make`
 
-### 3.2 Dependencias
-#### Opción A: CMake (recomendada)
-- `g++` (C++17 o superior)
-- `cmake` (>= 3.16)
-- `make`
-
-Instalación en Ubuntu/Debian:
+### Instalación de herramientas básicas
 ```bash
 sudo apt update
 sudo apt install -y build-essential cmake
 ````
 
-#### Opción B: Makefile (si se proporciona)
+---
 
-* `g++`
-* `make`
+## 4. Dependencias externas
+
+### 4.1 OpenCV (equivalente a `cv2` en C++)
+
+> En C++ no se instala `cv2` como en Python.
+> Se instalan las **librerías OpenCV** y se enlazan en la compilación.
+
+#### Instalación (Ubuntu/Debian)
+
+```bash
+sudo apt update
+sudo apt install -y libopencv-dev pkg-config
+```
+
+Verificar instalación:
+
+```bash
+pkg-config --modversion opencv4
+```
 
 ---
 
-## 4. Compilación
+## 5. Compilación
 
-### 4.1 Compilar con CMake (recomendado)
+### 5.1 Compilación con CMake (recomendada)
 
 Desde la raíz del repositorio:
 
@@ -61,13 +74,13 @@ cmake -S . -B build
 cmake --build build -j
 ```
 
-El ejecutable se generará en:
+El ejecutable principal se generará en:
 
 ```bash
 ./build/so_practica
 ```
 
-### 4.2 Compilar con Makefile (si aplica)
+### 5.2 Compilación alternativa con Makefile (si aplica)
 
 ```bash
 make
@@ -75,96 +88,97 @@ make
 
 ---
 
-## 5. Ejecución
+## 6. Ejecución
 
-### 5.1 Ejecución básica
+### 6.1 Ejecución básica
 
 ```bash
 ./build/so_practica
 ```
 
-### 5.2 Ejecución con argumentos (ejemplo)
+### 6.2 Ejecución con parámetros (ejemplo)
 
 ```bash
 ./build/so_practica --mode=threads --n=4 --iters=100000
 ```
 
-Parámetros soportados (ejemplo):
+Parámetros admitidos (ejemplo):
 
 * `--mode=threads|processes|ipc`
-* `--n=<num>` número de hilos/procesos
-* `--iters=<num>` iteraciones de trabajo
-* `--input=<ruta>` fichero de entrada (si aplica)
-
-> Si tu práctica no usa argumentos, elimina esta sección o ajusta los parámetros reales.
+* `--n=<num>` número de hilos o procesos
+* `--iters=<num>` número de iteraciones
+* `--input=<ruta>` fichero de entrada (si procede)
 
 ---
 
-## 6. Ejemplos de uso
+## 7. Ejemplo mínimo con OpenCV en C++
 
-### 6.1 Ejemplo 1: modo hilos
+Archivo `src/opencv_test.cpp`:
+
+```cpp
+#include <opencv2/opencv.hpp>
+#include <iostream>
+
+int main() {
+    std::cout << "OpenCV version: " << CV_VERSION << std::endl;
+
+    cv::Mat img = cv::Mat::zeros(200, 200, CV_8UC3);
+    cv::putText(img, "OK", {50, 110},
+                cv::FONT_HERSHEY_SIMPLEX, 1.0,
+                {255, 255, 255}, 2);
+
+    cv::imshow("OpenCV Test", img);
+    cv::waitKey(0);
+    return 0;
+}
+```
+
+Compilación directa (sin CMake):
 
 ```bash
-./build/so_practica --mode=threads --n=8 --iters=500000
+g++ -std=c++17 src/opencv_test.cpp -o opencv_test \
+`pkg-config --cflags --libs opencv4`
 ```
 
-### 6.2 Ejemplo 2: modo IPC (pipes/shared memory, etc.)
+Ejecución:
 
 ```bash
-./build/so_practica --mode=ipc --input=data/input.txt
-```
-
----
-
-## 7. Salida esperada / Verificación rápida
-
-Al ejecutarse correctamente, el programa debería:
-
-* terminar sin errores
-* mostrar un resumen por consola similar a:
-
-  * número de hilos/procesos creados
-  * tiempo total de ejecución
-  * contadores/resultados finales
-  * confirmación de sincronización correcta (si aplica)
-
-Ejemplo:
-
-```
-[OK] mode=threads n=8 iters=500000
-[RESULT] counter=4000000
-[TIME] 0.38s
+./opencv_test
 ```
 
 ---
 
-## 8. Tests (opcional)
+## 8. Salida esperada
 
-Si hay tests:
+Al ejecutar correctamente el programa:
 
-```bash
-ctest --test-dir build
+* El programa finaliza sin errores
+* Se muestran mensajes informativos por consola
+* En caso de usar OpenCV, se abre una ventana gráfica o se genera un fichero de salida
+
+Ejemplo de salida:
+
 ```
-
-O si existe un binario de tests:
-
-```bash
-./build/so_practica_tests
+[INFO] Mode: threads
+[INFO] Threads: 4
+[RESULT] Counter final = 400000
+[TIME] Execution time: 0.35 s
 ```
 
 ---
 
-## 9. Notas de implementación
+## 9. Depuración
 
-* Estándar: **C++17**
-* Compilación con flags recomendados:
-
-  * `-Wall -Wextra -Wpedantic`
-* Para debug:
+Compilar en modo **Debug**:
 
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 cmake --build build -j
+```
+
+Ejecutar con `gdb`:
+
+```bash
 gdb ./build/so_practica
 ```
 
@@ -172,34 +186,29 @@ gdb ./build/so_practica
 
 ## 10. Problemas comunes
 
-### 10.1 “cmake: command not found”
+### OpenCV no abre ventanas
 
-Instala CMake:
+* Estás en un entorno sin GUI (WSL, servidor).
+* Solución: usar `cv::imwrite()` o ejecutar en un entorno gráfico.
 
-```bash
-sudo apt install -y cmake
-```
-
-### 10.2 Permiso denegado al ejecutar
+### Error: `opencv4.pc not found`
 
 ```bash
-chmod +x ./build/so_practica
-```
-
-### 10.3 “No such file or directory” al ejecutar
-
-Asegúrate de haber compilado:
-
-```bash
-cmake --build build -j
+sudo apt install -y libopencv-dev pkg-config
 ```
 
 ---
 
 ## 11. Autoría
 
-* Alumno/a 1: Nombre Apellidos
-* Alumno/a 2: Nombre Apellidos
+* Alumno/a 1: Nombre y Apellidos
+* Alumno/a 2: Nombre y Apellidos
 
+> **Nota**: aunque la práctica se realiza en pareja, **la evaluación es individual**.
 
+---
+
+## 12. Licencia
+
+Proyecto académico con fines docentes. Uso restringido a la asignatura de **Sistemas Operativos**.
 
