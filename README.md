@@ -8,7 +8,7 @@ El proyecto está diseñado para ser **totalmente autocontenido**, de modo que c
 ---
 
 ## 2. Estructura del repositorio
-```
+
 
 .
 ├── src/                # Código fuente (.cpp)
@@ -21,7 +21,7 @@ El proyecto está diseñado para ser **totalmente autocontenido**, de modo que c
 ├── Makefile            # Alternativa de compilación (opcional)
 └── README.md
 
-````
+
 
 ---
 
@@ -36,7 +36,7 @@ El proyecto está diseñado para ser **totalmente autocontenido**, de modo que c
 ```bash
 sudo apt update
 sudo apt install -y build-essential cmake
-````
+
 
 ---
 
